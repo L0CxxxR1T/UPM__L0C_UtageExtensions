@@ -126,3 +126,10 @@ InitTestScene*.unity*
 fmod_editor.log
 
 .uloop/outputs/
+
+/[Aa]ssets/Utage/
+/[Aa]ssets/Utage.meta
+/[Aa]ssets/L0C_ExtensionsDemo/
+/[Aa]ssets/L0C_ExtensionsDemo.meta
+/[Aa]ssets/TextMesh Pro/
+/[Aa]ssets/TextMesh Pro.meta

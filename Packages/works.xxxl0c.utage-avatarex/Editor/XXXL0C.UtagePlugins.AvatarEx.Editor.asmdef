@@ -1,0 +1,20 @@
+{
+    "name": "XXXL0C.UtagePlugins.AvatarEx.Editor",
+    "rootNamespace": "XXXL0C.UtagePlugins.AvatarEx.Editor",
+    "references": [
+        "GUID:feccedfe35683a44cbdbb1f990156165",
+        "GUID:dc40feddc6580b9459e3527365c078fd",
+        "GUID:ef1c52e84cd4e994ea26c95879e4d866"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

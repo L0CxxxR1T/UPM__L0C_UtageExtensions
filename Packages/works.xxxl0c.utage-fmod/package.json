@@ -1,0 +1,17 @@
+{
+  "name": "works.xxxl0c.utage-fmod",
+  "displayName": "[xxxL0C] UtageExt: FMOD",
+  "version": "0.1.0",
+  "unity": "6000.3",
+  "unityRelease": "25f1",
+  "description": "【宴4用】\nFMODオーディオミドルウェア対応プラグイン",
+  "dependencies": {
+    "com.unity.test-framework": "1.6.0",
+    "com.fmod.fmod-for-unity-2-03": "2.3.0"
+  },
+  "author": {
+    "name": "L0C_R1T",
+    "url": "https://github.com/L0CxxxR1T",
+    "email": "contact@dev.xxxl0c.works"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "works.xxxl0c.utage-avatarex",
+  "displayName": "[xxxL0C] UtageExt: AvatarEX",
+  "version": "0.1.0",
+  "unity": "6000.3",
+  "unityRelease": "25f1",
+  "description": "【宴4用】\nAvatarグラフィックオブジェクトに合成モードやクリッピングマスクを追加するプラグイン",
+  "dependencies": {
+    "com.unity.test-framework": "1.6.0"
+  },
+  "author": {
+    "name": "L0C_R1T",
+    "url": "https://github.com/L0CxxxR1T",
+    "email": "contact@dev.xxxl0c.works"
+  }
+}

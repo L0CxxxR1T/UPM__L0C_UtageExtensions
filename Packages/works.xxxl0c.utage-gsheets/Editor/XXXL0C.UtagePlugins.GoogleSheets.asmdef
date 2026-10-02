@@ -1,0 +1,19 @@
+{
+    "name": "XXXL0C.UtagePlugins.GoogleSheets",
+    "rootNamespace": "XXXL0C.UtagePlugins.GoogleSheets",
+    "references": [
+        "Utage",
+        "UtageEditor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
