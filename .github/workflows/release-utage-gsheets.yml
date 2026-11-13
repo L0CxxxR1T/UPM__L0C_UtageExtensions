@@ -20,5 +20,5 @@ jobs:
       package-dir: Packages/works.xxxl0c.utage-gsheets
       tag-prefix: utage-gsheets-
       prerequisites: |
-        - 宴(Utage) 4.2.9: Asset Store から購入し、あらかじめプロジェクトにインポートしてください
+        - 宴(Utage) 4.3.1: Asset Store から購入し、あらかじめプロジェクトにインポートしてください
         - Google Apps Script のウェブアプリ: 読み込むスプレッドシートごとにデプロイが必要です

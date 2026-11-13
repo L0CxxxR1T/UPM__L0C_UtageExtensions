@@ -20,5 +20,5 @@ jobs:
       package-dir: Packages/works.xxxl0c.utage-fmod
       tag-prefix: utage-fmod-
       prerequisites: |
-        - 宴(Utage) 4.2.9: Asset Store から購入し、あらかじめプロジェクトにインポートしてください
+        - 宴(Utage) 4.3.1: Asset Store から購入し、あらかじめプロジェクトにインポートしてください
         - FMOD for Unity 2.03（`com.fmod.fmod-for-unity.v203`）: 依存パッケージとして Unity Registry から自動で導入されます
