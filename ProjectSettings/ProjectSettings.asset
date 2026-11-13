@@ -689,7 +689,7 @@ PlayerSettings:
   cloudProjectId: a30f8f7f-b7d2-45c0-a826-5497b87e81cb
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: UtageFmodExtension
+  projectName: '[UPM] UtageExtensions'
   organizationId: fuyuhitsugi
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0

@@ -1,5 +1,31 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8229251043302654591
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e755fa8428c29bf4c91c8fd73ae80010, type: 3}
+  m_Name: RuleFadeVolume
+  m_EditorClassIdentifier: UtageForUrp::Utage.RenderPipeline.Urp.RuleFadeVolume
+  active: 1
+  strength:
+    m_OverrideState: 1
+    m_Value: 0
+  color:
+    m_OverrideState: 1
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+    hdr: 0
+  ruleTexture:
+    m_OverrideState: 1
+    m_Value: {fileID: 0}
+  vague:
+    m_OverrideState: 1
+    m_Value: 0.2
 --- !u!114 &-8186968272690591729
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -248,6 +274,22 @@ MonoBehaviour:
   highlightsEnd:
     m_OverrideState: 1
     m_Value: 1
+--- !u!114 &-6179242219930238487
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a10f5ab09b941ce824ed29c9ed81f81, type: 3}
+  m_Name: CaptureVolume
+  m_EditorClassIdentifier: UtageForUrp::Utage.RenderPipeline.Urp.CaptureVolume
+  active: 1
+  enable:
+    m_OverrideState: 1
+    m_Value: 0
 --- !u!114 &-4210620904635426390
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -322,6 +364,9 @@ MonoBehaviour:
   highQualityFiltering:
     m_OverrideState: 1
     m_Value: 0
+  filter:
+    m_OverrideState: 1
+    m_Value: 0
   downscale:
     m_OverrideState: 1
     m_Value: 0
@@ -355,6 +400,22 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   balance:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &-3736825655574691560
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f85180b3e93778c41b007c946662799e, type: 3}
+  m_Name: MotionBlurVolume
+  m_EditorClassIdentifier: UtageForUrp::Utage.RenderPipeline.Urp.MotionBlurVolume
+  active: 1
+  strength:
     m_OverrideState: 1
     m_Value: 0
 --- !u!114 &-3386560400091697801
@@ -401,6 +462,74 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 1
   bladeRotation:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &-2589798908713892456
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8098de1fb5f56a3428eeab7426a26e7c, type: 3}
+  m_Name: NegaPosiVolume
+  m_EditorClassIdentifier: UtageForUrp::Utage.RenderPipeline.Urp.NegaPosiVolume
+  active: 1
+  enable:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &-2510737317641057378
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fde9de10ef74b1e976daef88cfefdcf, type: 3}
+  m_Name: ColorFadeVolume
+  m_EditorClassIdentifier: UtageForUrp::Utage.RenderPipeline.Urp.ColorFadeVolume
+  active: 1
+  strength:
+    m_OverrideState: 1
+    m_Value: 0
+  color:
+    m_OverrideState: 1
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
+    hdr: 0
+--- !u!114 &-1178862890813129411
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a252d6147d115747abb49c226e56774, type: 3}
+  m_Name: SepiaVolume
+  m_EditorClassIdentifier: UtageForUrp::Utage.RenderPipeline.Urp.SepiaVolume
+  active: 1
+  strength:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &-1128583032166484499
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51089edbd6220b0408a3b2d9c2c1de73, type: 3}
+  m_Name: GrayScaleVolume
+  m_EditorClassIdentifier: UtageForUrp::Utage.RenderPipeline.Urp.GrayScaleVolume
+  active: 1
+  strength:
     m_OverrideState: 1
     m_Value: 0
 --- !u!114 &-1083910812058648046
@@ -506,6 +635,18 @@ MonoBehaviour:
   - {fileID: -8186968272690591729}
   - {fileID: -3978695733392391637}
   - {fileID: -1083910812058648046}
+  - {fileID: 6331595640315389539}
+  - {fileID: -1128583032166484499}
+  - {fileID: -1178862890813129411}
+  - {fileID: 768153478687658069}
+  - {fileID: 8192849850973772718}
+  - {fileID: -2589798908713892456}
+  - {fileID: -8229251043302654591}
+  - {fileID: 7696787286724648055}
+  - {fileID: -6179242219930238487}
+  - {fileID: -3736825655574691560}
+  - {fileID: 6419925733808262080}
+  - {fileID: -2510737317641057378}
 --- !u!114 &156332030701414761
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -528,6 +669,31 @@ MonoBehaviour:
   gain:
     m_OverrideState: 1
     m_Value: {x: 1, y: 1, z: 1, w: 0}
+--- !u!114 &768153478687658069
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3157029ba694a14a88261513c494a07, type: 3}
+  m_Name: BlurVolume
+  m_EditorClassIdentifier: UtageForUrp::Utage.RenderPipeline.Urp.BlurVolume
+  active: 1
+  blurSize:
+    m_OverrideState: 1
+    m_Value: 0
+  blurType:
+    m_OverrideState: 1
+    m_Value: 0
+  downSample:
+    m_OverrideState: 1
+    m_Value: 1
+  blurIterations:
+    m_OverrideState: 1
+    m_Value: 2
 --- !u!114 &1247868777620691934
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -718,6 +884,72 @@ MonoBehaviour:
   chromaticAbberationIntensity:
     m_OverrideState: 1
     m_Value: 0.5
+--- !u!114 &6331595640315389539
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47918d516f9b3da41a14d4ac0a02a073, type: 3}
+  m_Name: FishEyeVolume
+  m_EditorClassIdentifier: UtageForUrp::Utage.RenderPipeline.Urp.FishEyeVolume
+  active: 1
+  strength:
+    m_OverrideState: 1
+    m_Value: 0
+  intensityX:
+    m_OverrideState: 1
+    m_Value: 0.5
+  intensityY:
+    m_OverrideState: 1
+    m_Value: 0.5
+  baseSize:
+    m_OverrideState: 1
+    m_Value: 0.15625
+--- !u!114 &6419925733808262080
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8610956a1fa595e48a9742ef0cd5251f, type: 3}
+  m_Name: TwirlVolume
+  m_EditorClassIdentifier: UtageForUrp::Utage.RenderPipeline.Urp.TwirlVolume
+  active: 1
+  angle:
+    m_OverrideState: 1
+    m_Value: 0
+  radius:
+    m_OverrideState: 1
+    m_Value: {x: 0.3, y: 0.3}
+  center:
+    m_OverrideState: 1
+    m_Value: {x: 0.5, y: 0.5}
+--- !u!114 &7696787286724648055
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d65a8a138eb021478b74f87acf42138, type: 3}
+  m_Name: MosaicVolume
+  m_EditorClassIdentifier: UtageForUrp::Utage.RenderPipeline.Urp.MosaicVolume
+  active: 1
+  size:
+    m_OverrideState: 1
+    m_Value: 1
+  referenceResolution:
+    m_OverrideState: 1
+    m_Value: {x: 800, y: 600}
 --- !u!114 &7933203426823181213
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -746,6 +978,28 @@ MonoBehaviour:
   saturation:
     m_OverrideState: 1
     m_Value: 0
+--- !u!114 &8192849850973772718
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 666e68c01c63bfe45b16aa4a90e246e4, type: 3}
+  m_Name: VortexVolume
+  m_EditorClassIdentifier: UtageForUrp::Utage.RenderPipeline.Urp.VortexVolume
+  active: 1
+  angle:
+    m_OverrideState: 1
+    m_Value: 0
+  radius:
+    m_OverrideState: 1
+    m_Value: {x: 0.4, y: 0.4}
+  center:
+    m_OverrideState: 1
+    m_Value: {x: 0.5, y: 0.5}
 --- !u!114 &8549655192814258499
 MonoBehaviour:
   m_ObjectHideFlags: 3
