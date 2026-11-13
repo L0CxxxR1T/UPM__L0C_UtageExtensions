@@ -1,0 +1,134 @@
+# 各パッケージのリリース用ワークフローから呼ばれる共通処理
+name: Release Package (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      package-dir:
+        description: リポジトリルートからのパッケージディレクトリ
+        required: true
+        type: string
+      tag-prefix:
+        description: タグ名の接頭辞（例 utage-fmod-）
+        required: true
+        type: string
+      prerequisites:
+        description: 前提パッケージの箇条書き（Markdown）。Unity のバージョンは package.json から自動で入る
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      PACKAGE_DIR: ${{ inputs.package-dir }}
+      TAG_PREFIX: ${{ inputs.tag-prefix }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # 前回タグからの変更履歴を作るため全履歴を取得する
+          fetch-depth: 0
+
+      - name: パッケージ情報の読み取り
+        id: meta
+        run: |
+          manifest="$PACKAGE_DIR/package.json"
+          name=$(jq -r '.name' "$manifest")
+          display_name=$(jq -r '.displayName // .name' "$manifest")
+          version=$(jq -r '.version' "$manifest")
+          if [ -z "$version" ] || [ "$version" = "null" ]; then
+            echo "::error file=$manifest::version が読み取れません"
+            exit 1
+          fi
+          tag="${TAG_PREFIX}v${version}"
+          {
+            echo "name=$name"
+            echo "display-name=$display_name"
+            echo "version=$version"
+            echo "tag=$tag"
+          } >> "$GITHUB_OUTPUT"
+
+          if git rev-parse -q --verify "refs/tags/$tag" > /dev/null; then
+            echo "::notice::$tag は作成済みのためリリースをスキップします。package.json の version を上げてください"
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: リリースノートの作成
+        if: steps.meta.outputs.exists == 'false'
+        env:
+          PKG_NAME: ${{ steps.meta.outputs.name }}
+          TAG: ${{ steps.meta.outputs.tag }}
+          PREREQUISITES: ${{ inputs.prerequisites }}
+        run: |
+          git_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git?path=${PACKAGE_DIR}#${TAG}"
+          readme_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/blob/${TAG}/${PACKAGE_DIR}/README.md"
+          manifest="$PACKAGE_DIR/package.json"
+          unity_version=$(jq -r '[.unity, .unityRelease] | map(select(. != null)) | join(".")' "$manifest")
+          prev_tag=$(git tag --list "${TAG_PREFIX}v*" --sort=-v:refname | head -n 1)
+          if [ -n "$prev_tag" ]; then
+            range="${prev_tag}..HEAD"
+          else
+            range="HEAD"
+          fi
+
+          {
+            echo "## 前提パッケージ"
+            echo
+            echo "導入する前に、次の環境とパッケージを用意してください。"
+            echo
+            if [ -n "$unity_version" ]; then
+              echo "- Unity ${unity_version} 以降"
+            fi
+            if [ -n "$PREREQUISITES" ]; then
+              printf '%s\n' "$PREREQUISITES"
+            fi
+            echo
+            echo "セットアップ手順は [README](${readme_url}) を参照してください。"
+            echo
+            echo "## 導入方法"
+            echo
+            echo "Unity の Package Manager で「+」→「Install package from git URL...」を選び、次の URL を入力してください。"
+            echo
+            echo '```'
+            echo "$git_url"
+            echo '```'
+            echo
+            echo "\`Packages/manifest.json\` に直接書く場合は \`dependencies\` に次の行を追加してください。"
+            echo
+            echo '```json'
+            echo "\"${PKG_NAME}\": \"${git_url}\""
+            echo '```'
+            echo
+            echo "## 変更内容"
+            echo
+            if [ -n "$prev_tag" ]; then
+              echo "前回のリリース（${prev_tag}）からの変更です。"
+              echo
+            fi
+            changes=$(git log "$range" --no-merges --format='- %s (%h)' -- "$PACKAGE_DIR")
+            if [ -n "$changes" ]; then
+              echo "$changes"
+            else
+              echo "- パッケージ内のファイルに変更はありません"
+            fi
+          } > release-notes.md
+
+          cat release-notes.md
+
+      - name: リリースの作成
+        if: steps.meta.outputs.exists == 'false'
+        env:
+          TAG: ${{ steps.meta.outputs.tag }}
+          TITLE: ${{ steps.meta.outputs.display-name }} v${{ steps.meta.outputs.version }}
+        run: |
+          gh release create "$TAG" \
+            --target "$GITHUB_SHA" \
+            --title "$TITLE" \
+            --notes-file release-notes.md

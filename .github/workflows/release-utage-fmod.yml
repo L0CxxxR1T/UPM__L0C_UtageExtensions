@@ -1,0 +1,24 @@
+name: Release UtageExt FMOD
+
+on:
+  push:
+    branches:
+      - release
+    paths:
+      - Packages/works.xxxl0c.utage-fmod/**
+      - .github/workflows/release-utage-fmod.yml
+      - .github/workflows/release-package.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    uses: ./.github/workflows/release-package.yml
+    with:
+      package-dir: Packages/works.xxxl0c.utage-fmod
+      tag-prefix: utage-fmod-
+      prerequisites: |
+        - 宴(Utage) 4.2.9: Asset Store から購入し、あらかじめプロジェクトにインポートしてください
+        - FMOD for Unity 2.03（`com.fmod.fmod-for-unity.v203`）: 依存パッケージとして Unity Registry から自動で導入されます

@@ -1,0 +1,24 @@
+name: Release UtageExt Google Sheets
+
+on:
+  push:
+    branches:
+      - release
+    paths:
+      - Packages/works.xxxl0c.utage-gsheets/**
+      - .github/workflows/release-utage-gsheets.yml
+      - .github/workflows/release-package.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    uses: ./.github/workflows/release-package.yml
+    with:
+      package-dir: Packages/works.xxxl0c.utage-gsheets
+      tag-prefix: utage-gsheets-
+      prerequisites: |
+        - 宴(Utage) 4.2.9: Asset Store から購入し、あらかじめプロジェクトにインポートしてください
+        - Google Apps Script のウェブアプリ: 読み込むスプレッドシートごとにデプロイが必要です
