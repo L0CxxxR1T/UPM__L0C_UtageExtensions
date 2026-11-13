@@ -4,10 +4,10 @@
   "version": "0.1.0",
   "unity": "6000.3",
   "unityRelease": "25f1",
-  "description": "【宴4用】\nFMODオーディオミドルウェア対応プラグイン",
+  "description": "\u3010\u5bb44\u7528\u3011\nFMOD\u30aa\u30fc\u30c7\u30a3\u30aa\u30df\u30c9\u30eb\u30a6\u30a7\u30a2\u5bfe\u5fdc\u30d7\u30e9\u30b0\u30a4\u30f3",
   "dependencies": {
     "com.unity.test-framework": "1.6.0",
-    "com.fmod.fmod-for-unity-2-03": "2.3.0"
+    "com.fmod.fmod-for-unity.v203": "2.3.0"
   },
   "author": {
     "name": "L0C_R1T",
