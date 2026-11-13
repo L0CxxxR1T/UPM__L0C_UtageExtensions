@@ -14,7 +14,7 @@ Utageノベルゲームエンジン用のFMOD Studio統合拡張機能です。B
 
 ## 前提条件
 
-- Unity 6000.3.20f1 / Utage 4.2.9 / FMOD for Unity 2.03
+- Unity 6000.3.25f1 / Utage 4.3.1 / FMOD for Unity 2.03
 - asmdef構成
   - Runtime `XXXL0C.UtagePlugins.FMOD` — `Utage` と `FMODUnity` を参照
   - Editor `XXXL0C.UtagePlugins.FMOD.Editor` — `FMODUnity` と上記Runtimeを参照（`includePlatforms: ["Editor"]`）

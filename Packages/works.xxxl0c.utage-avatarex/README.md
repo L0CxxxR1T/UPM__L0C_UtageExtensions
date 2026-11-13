@@ -18,7 +18,7 @@ Utageノベルゲームエンジン用のAvatar機能拡張です。パーツ（
 
 ## 前提条件
 
-- Unity 6000.3.21f1 / Utage 4.2.9
+- Unity 6000.3.25f1 / Utage 4.3.1
 - asmdef構成
   - Runtime `XXXL0C.UtagePlugins.AvatarEx` — `Utage` を参照
   - Editor `XXXL0C.UtagePlugins.AvatarEx.Editor` — `Utage` / `UtageEditor` / 上記Runtimeを参照
