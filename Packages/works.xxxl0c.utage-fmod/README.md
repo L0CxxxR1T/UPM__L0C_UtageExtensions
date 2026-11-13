@@ -89,19 +89,19 @@ Utageノベルゲームエンジン用のFMOD Studio統合拡張機能です。B
 | Arg2 | 値。数値としてパースできればfloatパラメータ、できなければ Labeled Parameter のラベル文字列として扱う（必須） |
 | Arg3 | 対象。`Global`（既定）/ `Bgm` / `Ambience` / `Se` / `Voice` |
 | Arg4 | ラベル。Arg3がグループの時のみ有効。省略時はそのグループの再生中インスタンス全部が対象 |
-| Arg5 | 補間時間（秒）。既定0＝即時設定 |
+| Arg6 | 補間時間（秒）。既定0＝即時設定 |
 | WaitType | 補間完了待ち。既定 `NoWait`（未指定なら待たずに次のコマンドへ進みます） |
 
 ```csv
 FmodParam,Rain,0.8                      グローバルパラメータ Rain を即時 0.8 に設定
 FmodParam,Weather,Rainy                 グローバルの Labeled Parameter Weather に Rainy を設定
-FmodParam,LowPass,1,Bgm,,2.0            再生中BGM全部のローカルパラメータ LowPass を2秒かけて1へ補間
+FmodParam,LowPass,1,Bgm,,,2.0           再生中BGM全部のローカルパラメータ LowPass を2秒かけて1へ補間
 FmodParam,Pitch,1.2,Se,爆発              Seのラベル「爆発」で再生中のインスタンスだけ Pitch を1.2に設定
 ```
 
 補足:
-- 即時設定（Arg5省略/0）はFMOD Studio側のSeek Speedを尊重します。補間中（Arg5>0）は毎フレーム値を送るため強制的に即時反映（ignoreSeekSpeed）になります
-- Labeled Parameterは補間に対応していません。Arg5を指定していた場合は警告を出して即時設定にフォールバックします
+- 即時設定（Arg6省略/0）はFMOD Studio側のSeek Speedを尊重します。補間中（Arg6>0）は毎フレーム値を送るため強制的に即時反映（ignoreSeekSpeed）になります
+- Labeled Parameterは補間に対応していません。Arg6を指定していた場合は警告を出して即時設定にフォールバックします
 - 対象グループに該当インスタンスが1本もない場合はエラーではなく警告ログのみです（コマンド自体は失敗しません）
 - パラメータはコマンド実行時点で再生中のインスタンスにのみ適用されます。後から再生されたインスタンスには引き継がれません
 - グローバルパラメータの値はUtageのセーブデータに保存されません。ロード後に必要なら再設定してください
