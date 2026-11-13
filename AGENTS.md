@@ -1,66 +1,84 @@
 # AGENTS.md
 
-このリポジトリで作業するエージェント（Claude Code / Codex）向けのガイド。`CLAUDE.md` はこのファイルを読み込むだけなので、編集はこのファイルに対して行う。
+このリポジトリで作業するエージェント（Claude Code / Codex）向けのガイド。`CLAUDE.md`はこのファイルを読み込むだけなので、編集はこのファイルに対して行う。
 
 ## プロジェクト概要
 
-ノベルゲームエンジン「宴(Utage) 4.2.9」（`Assets/Utage/Scripts/Version.cs`）向けの拡張プラグイン集を作る Unity プロジェクト（Unity 6000.3.21f1 / URP 17.3.0 / Input System 1.20.0 / FMOD for Unity 2.3.14〈`com.fmod.fmod-for-unity-2-03`〉）。
+ノベルゲームエンジン「宴(Utage)」向けの拡張プラグインを、UPMパッケージとして開発・配布するUnityプロジェクト。各バージョンの一次情報は次のファイルにある。
 
-実装は2つ、いずれも `Assets/L0C_UtagePlugins/` 配下（asmdef 名は `XXXL0C.UtagePlugins.*`）:
+- Unity: `ProjectSettings/ProjectVersion.txt`
+- 宴: `Assets/Utage/Scripts/Version.cs`
+- FMOD for Unity・URP・Input Systemなどのパッケージ: `Packages/manifest.json`
 
-- `Assets/L0C_UtagePlugins/FMOD/` — Utage の BGM/Ambience/SE/Voice 再生を FMOD Studio 経由に丸ごと差し替える。実装済み
-- `Assets/L0C_UtagePlugins/GoogleSheets/` — Google スプレッドシートをシナリオソースとして読み込む Editor 拡張。実装済み
+プラグインは`Packages/`配下の埋め込みパッケージで、1パッケージ1プラグイン。asmdef名は`XXXL0C.UtagePlugins.*`にそろえている。
 
-動作サンプルは `Assets/L0C_ExtensionsDemo/`（`Scenes/SampleScene.unity`、`FmodSoundSettings.asset`、`Scenarios/`）。
+- `Packages/works.xxxl0c.utage-fmod/`: 宴のBGM/Ambience/SE/Voice再生をFMOD Studio経由に差し替える
+- `Packages/works.xxxl0c.utage-gsheets/`: Googleスプレッドシートをシナリオソースとして読み込むEditor拡張
+- `Packages/works.xxxl0c.utage-avatarex/`: Avatarのパーツ単位にブレンドモードとクリッピングマスクを追加する
+
+宴はUPMパッケージではないため、`package.json`の`dependencies`に書けない。各パッケージのasmdefは`Assets/Utage/`の`Utage`/`UtageEditor`アセンブリを直接参照しており、導入先には宴を先にインポートしてもらう前提になっている。
+
+## Gitで管理していないもの
+
+`Assets/Utage/`、`Assets/TextMesh Pro/`、`Assets/L0C_ExtensionsDemo/`は`.gitignore`で除外している。宴は購入アセットで再配布できず、デモは宴のアセットを使っているため。これらは作者の手元にだけあり、クローン直後の環境には存在しない。
 
 ## ドキュメントの在り処
 
-- **Utage のシナリオリファレンス（構文・コマンド一覧の一次情報）は `Assets/Utage/Docs/ScenarioReference/ja/`（正本）と `.../en/`**。`01_ScenarioBasics` 〜 `09_Localization` の9本 + README。シナリオ（.xls/CSV）の列構成・コマンド引数・設定シート定義・インポートエラーの読み方はここを読む。シナリオファイルを書く/直す前や、未知のコマンド・シート仕様を調べる時は必ず先にここを参照する
-- 各プラグインの機能・セットアップ手順・動作の仕組み・制限事項・トラブルシューティングは `Assets/L0C_UtagePlugins/FMOD/README.md` と `Assets/L0C_UtagePlugins/GoogleSheets/README.md` に詳しく書かれている。以下のアーキテクチャ節はこれを前提にした要点のみなので、作業前にそれぞれの README を読むこと
+- 宴のシナリオリファレンス（構文・コマンド一覧の一次情報）は`Assets/Utage/Docs/ScenarioReference/ja/`（正本）と`.../en/`にある。シナリオ（.xls/CSV）の列構成・コマンド引数・設定シート定義・インポートエラーの読み方はここを読む。シナリオファイルを書く/直す前や、未知のコマンド・シート仕様を調べる時は必ず先にここを参照する
+- 各プラグインの機能・セットアップ手順・動作の仕組み・制限事項・トラブルシューティングは、各パッケージ直下の`README.md`に書いてある。以下のアーキテクチャ節は要点だけなので、プラグインに手を入れる前に該当パッケージのREADMEを読む
+- AvatarExの設計仕様は`Packages/works.xxxl0c.utage-avatarex/Docs/Spec_AvatarEx.md`にある
 
 ## 編集してよい範囲
 
-- `Assets/Utage/` と `Assets/Plugins/FMOD/`、`Assets/TextMesh Pro/` は購入・配布アセットのベンダーコード。読解対象であり基本的に改変しない。Utage 側の挙動を変えたくなったら、まず拡張ポイント（下記）で解決できないか検討する
-- ルート直下の `*.csproj` / `*.slnx` は Unity が自動生成するファイルなので手編集しない
-- 自前の実装は `Assets/L0C_UtagePlugins/` と、サンプル/検証用の `Assets/L0C_ExtensionsDemo/`
+- 自前の実装は`Packages/works.xxxl0c.*`と、サンプル/検証用の`Assets/L0C_ExtensionsDemo/`
+- `Assets/Utage/`、`Assets/TextMesh Pro/`、`Assets/Plugins/UnityEditorDarkMode/`は配布アセットなので読むだけにする。宴の挙動を変えたくなったら、宴のイベントや差し替え用のインターフェースで解決する
+- FMOD for UnityはUPMパッケージ（`Library/PackageCache/com.fmod.fmod-for-unity.v203@*`）。`Assets/Plugins/FMOD/`にあるのはプロジェクト固有の設定とキャッシュだけ
+- ルート直下の`*.csproj`/`*.slnx`はUnityが自動生成するので手で編集しない
 
-## アセンブリ構成
+## アーキテクチャ：宴のサウンドをFMODに差し替える仕組み
 
-- `XXXL0C.UtagePlugins.FMOD`（Runtime）は `Utage` と `FMODUnity` を GUID 参照している
-- `XXXL0C.UtagePlugins.FMOD.Editor` は `FMODUnity` と上記 Runtime を参照し `includePlatforms: ["Editor"]`
-- `XXXL0C.UtagePlugins.GoogleSheets` は Editor 専用（`includePlatforms: ["Editor"]`）で `Utage` / `UtageEditor` を名前参照
-- Utage 純正の拡張例として `Assets/Utage/ExtensionSupport/InputSystem/`（`InputSystemStrategy.cs`）や `RenderPipelines/URP/` があり、「別 asmdef でストラテジを差し込む」という同じ流儀を踏襲している
+- `Utage.SoundManager`（`Assets/Utage/Scripts/GameLib/Sound/SoundManager.cs`）がMonoBehaviourのシングルトン。実処理は`SoundManager.System`（`SoundManagerSystemInterface`）に委譲され、初アクセス時に発火する`OnCreateSoundSystem`イベント経由で差し替えられる
+- `FmodSoundBootstrap`（宴の`SoundManager`と同じGameObjectに付ける、`[DefaultExecutionOrder(-100)]`）が`OnCreateSoundSystem`を購読し、`FmodSoundSystem`を`SoundManager.System`に代入する。宴本体もシナリオコマンドも無改変でFMOD経由になる
+- `FmodSoundSystem`は`SoundManagerSystemInterface`と`SoundManagerSystemInterfaceEx`の両方を実装している。`SoundManager.SystemEx`は単なるキャストなので、片方だけだとキャラ別音量などが反映されない。挙動を合わせたい時は宴側の参照実装`SoundManagerSystem.cs`を読む
+- 再生管理は`FmodSoundGroup`→`FmodSoundInstance`の2層構造。フェード進行・インスタンス回収・VCAへの音量反映は`FmodSoundBootstrap.Update`から毎フレーム駆動される（コンポーネントを無効化すると止まる）
+- Voiceだけ例外で、宴がロード済みの`AudioClip`からPCMデータを取り出し、共通FMODイベント（Programmer Instrument）に流し込んで再生する（`FmodVoicePcmSoundFactory`）。このためVoiceは常にUnity側のロードが必要で、ロード抑止の対象外
+- `FmodAssetFileInterceptor`が`CustomLoadManager.OnFindAsset`に割り込み、FMOD化済みラベルの実体アセットのロードをダミー（`FmodDummyAssetFile`）に差し替えて無駄なロードを防ぐ
+- 設定はScriptableObjectの`FmodSoundSettings`（ラベル→FMODイベント対応、グループ/マスター/キャラ別VCA）。`FmodSoundSettingsEditor`がラベル未設定・重複・イベント未割り当てを検出する
+- FMODのStudio Project Path（`Assets/Plugins/FMOD/Resources/FMODStudioSettings.asset`）は作者環境の絶対パス（`F:/...`）を指している。他環境では`FMOD > Edit Settings`で設定し直す
 
-## アーキテクチャ：Utage のサウンドを FMOD に差し替える仕組み
+## アーキテクチャ：Googleスプレッドシートのシナリオリーダー
 
-- `Utage.SoundManager`（`Assets/Utage/Scripts/GameLib/Sound/SoundManager.cs`）が MonoBehaviour のシングルトン。実処理は `SoundManager.System`（`SoundManagerSystemInterface`）に委譲され、初アクセス時に発火する `OnCreateSoundSystem` イベント経由で差し替え可能
-- `FmodSoundBootstrap`（Utage の `SoundManager` と同じ GameObject に付ける、`[DefaultExecutionOrder(-100)]`）が `OnCreateSoundSystem` を購読し、`FmodSoundSystem` を `SoundManager.System` に代入する。Utage 本体もシナリオコマンドも無改変で FMOD 経由になる
-- `FmodSoundSystem` は `SoundManagerSystemInterface` と `SoundManagerSystemInterfaceEx` の両方を実装している。`SoundManager.SystemEx` は単なるキャストなので、片方だけだとキャラ別音量などが効かない。挙動を合わせたい時は Utage 側の参照実装 `SoundManagerSystem.cs` を読む
-- 再生管理は `FmodSoundGroup` → `FmodSoundInstance` の2層構造。フェード進行・インスタンス回収・VCA への音量反映は `FmodSoundBootstrap.Update` から毎フレーム駆動される（コンポーネントを無効化すると止まる）
-- Voice だけ例外: Utage がロード済みの `AudioClip` から PCM データを取り出し、共通 FMOD イベント（Programmer Instrument）に流し込んで再生する（`FmodVoicePcmSoundFactory`）。このため Voice だけは常に Unity 側ロードが必要で、ロード抑止の対象外
-- `FmodAssetFileInterceptor` が `CustomLoadManager.OnFindAsset` に割り込み、FMOD 化済みラベルの実体アセットロードをダミー（`FmodDummyAssetFile`）に差し替えて無駄なロードを防ぐ
-- 設定は ScriptableObject `FmodSoundSettings`（ラベル→FMODイベント対応、グループ/マスター/キャラ別 VCA）。`FmodSoundSettingsEditor` がラベル未設定・重複・イベント未割り当てを検出する
-- 既知の制限（`IntroTime` 未対応、`GetAudioSource` は常に null、セーブデータは独自バイナリで Utage 標準と非互換など）は `Assets/L0C_UtagePlugins/FMOD/README.md` の「制限事項」を参照
+- `AdvScenarioFileReaderGoogleSheets`（`IAdvScenarioFileReader`実装）は、対象パスが`GoogleSheetsScenarioSource`アセットかどうかで判定する。宴のインポータはファイルパスをアセット参照からしか集められないため、URLを直接シナリオパスに指定する方式にはしていない
+- Apps ScriptにHTTP GETし、1回のリクエストでスプレッドシート内の全シートをJSONでまとめて取得する（Excelリーダーと同じ「1ブック=複数シート」モデル）
+- `TryReadFile`は宴の同期APIのため、`HttpClient`を`Task.Run(...).GetAwaiter().GetResult()`で同期待ちしている。メインスレッドで`UnityWebRequest`をブロックすると処理が進まなくなるので、この構成は理由ごと維持する
+- シート名が`Sheet Comment Prefix`（既定`#`）で始まるシートは自動で除外される
+- シート内容の変更は宴の差分インポートで検知できないため、取り込みは必ずAll Importで行う
 
-## アーキテクチャ：Google スプレッドシートのシナリオリーダー
+## アーキテクチャ：AvatarEx
 
-- `AdvScenarioFileReaderGoogleSheets`（`IAdvScenarioFileReader` 実装）は、対象パスが `GoogleSheetsScenarioSource` アセットかどうかで判定する。URL を直接シナリオパスに指定する方式ではない（Utage のインポータがファイルパスをアセット参照からしか集められないため）
-- Apps Script に HTTP GET し、1回のリクエストでスプレッドシート内の全シートを JSON でまとめて取得する（Excel リーダーと同じ「1ブック=複数シート」モデル）。`TryReadFile` は Utage の同期 API のため、`UnityWebRequest` ではなく `HttpClient` を `Task.Run(...).GetAwaiter().GetResult()` で同期待ちしている（メインスレッドで `UnityWebRequest` をブロックすると進行しないため。変更時に踏みやすい地雷なので理由ごと維持する）
-- シート名が `Sheet Comment Prefix`（既定 `#`）で始まるものは自動除外される
-- シート内容の変更は Utage の差分インポートで検知できないため、取り込みは必ず All Import で行う
+- `AvatarExCustomCommandManager`が`OnBootInit()`で`AdvGraphicInfo.CallbackCreateCustom`に登録し、`FileType=AvatarEx`を`AdvGraphicObjectAvatarEx`に解決する。PlayMode開始のたびにコールバックがリセットされるので、毎回`-=`してから`+=`で登録し直す
+- 宴の`AvatarImage`は改変しない。`AvatarExPostProcessor`が`AvatarImage.OnPostRefresh`を購読し、再生成された各パーツの`Image`にマテリアルを後から差し込む
+- 目パチ・口パク中は`OnPostRefresh`が約10Hzで発火する。`AvatarExPostProcessor`の処理は、タグの逆引き辞書の再利用と、状態が変わらないマテリアル更新のスキップを前提に組んでいるので、毎回の走査や割り当てを足さない
+- シェーダー`UtageExtension/AvatarEx/BlendableUI`は`Shader.Find`で解決するため、`Runtime/Resources/AvatarEx-Shader/`から移動しない
+- `AvatarExData`のインスペクタボタンは、宴の`AvatarData`のprivateメソッドをリフレクションで呼び出して動かしている。宴を更新したら、`AvatarExData.cs`の`InvokeBaseEditorMethod`の呼び出し先が残っているか確認する
+
+## リリース
+
+- `release`ブランチにpushすると、`.github/workflows/release-utage-*.yml`がパッケージごとにタグとGitHub Releaseを作る。共通処理は`.github/workflows/release-package.yml`にある
+- タグ名は`<接頭辞>v<package.jsonのversion>`（例`utage-fmod-v0.1.0`）。同じタグがあればReleaseは作られないので、リリース前に該当パッケージの`package.json`の`version`を上げる
+- Releaseの説明文に載せる前提パッケージは、各呼び出し側ワークフローの`prerequisites`に書いている。宴やFMODの対応バージョンを変えたら、ここも合わせて直す
+- パッケージを追加したら、`release-utage-fmod.yml`を複製して呼び出し側ワークフローを1つ足す
 
 ## ビルド・実行・テスト
 
-- ビルド/コンパイルは Unity Editor 上で行う。CLI ビルドスクリプトはこのリポジトリには存在しない
-- Editor 操作・コンパイル確認・テスト実行の方針は `unity-coding-rules` スキルに従う
-  - 公式 Unity CLI の pipeline（`com.unity.pipeline`）: 未導入。uloop（`io.github.hatayama.uloopmcp`）は移行期間中の補完用
-  - Play での動作確認は `Assets/L0C_ExtensionsDemo/Scenes/SampleScene.unity` を使う。Console は `[UtageFmod]` プレフィックスで絞る
-  - テストアセンブリはまだ無い（`com.unity.test-framework` 1.6.0 は導入済み）。追加する場合は各プラグインの `Assets/L0C_UtagePlugins/<Plugin>/Tests/` に置く
-- FMOD の Studio Project Path はリポジトリ初期状態で作者環境の絶対パス（`F:/...`）を指しているため、他環境では `FMOD > Edit Settings` で自分の環境に合わせて再設定する必要がある（詳細は FMOD プラグインの README）
+- ビルド/コンパイルはUnity Editor上で行う。CLIのビルドスクリプトはない
+- Editor操作・コンパイル確認・テスト実行は`unity-coding-rules`スキルの方針に従う。公式Unity CLIのpipeline（`com.unity.pipeline`）は導入済みで、uloop（`io.github.hatayama.uloopmcp`）はpipelineで足りない操作の補完に使う
+- Playでの動作確認は`Assets/L0C_ExtensionsDemo/Scenes/SampleScene.unity`を使う。Consoleはパッケージごとのプレフィックス（`[UtageFmod]`、`[UtageAvatarEx]`）で絞る
+- テストアセンブリはまだない（`com.unity.test-framework`は導入済み）。追加する場合は各パッケージの`Tests/`に置く
 
 ## コーディング規約
 
-Unity/C# の規約は `unity-coding-rules` スキルに従う。このファイルには重複して書かない。
+Unity/C#の規約は`unity-coding-rules`スキルに従う。このファイルには重複して書かない。
 
-- DI: なし（VContainer 未導入。Utage のイベント・拡張ポイント経由で差し込む）
-- ログのプレフィックスは既存コードに倣い `[UtageFmod]` に揃える
+- DIは使わない（VContainer未導入）。宴のイベントや差し替え用のインターフェース経由で処理を差し込む
+- ログにはパッケージごとのプレフィックス（`[UtageFmod]`、`[UtageAvatarEx]`）を付ける
