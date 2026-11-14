@@ -29,6 +29,7 @@ namespace XXXL0C.UtagePlugins.FMOD
             }
 #endif
             FmodAssetFileInterceptor.Register(_settings);
+            FmodWebAudioUnlock.Register();
 
             if (_soundManager == null)
             {

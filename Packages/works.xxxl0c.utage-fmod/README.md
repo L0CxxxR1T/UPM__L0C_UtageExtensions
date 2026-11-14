@@ -11,6 +11,7 @@ Utageノベルゲームエンジン用のFMOD Studio統合拡張機能です。B
 - セーブ/ロード（Utageのバイナリセーブ機構）に対応
 - Unity Editor上でラベル未設定・重複・イベント未割り当てを検出するカスタムインスペクタ付き
 - カスタムコマンド `FmodParam` でシナリオからFMODパラメータ（グローバル/イベントローカル、float/Labeled Parameter、補間対応）を操作可能
+- WebGLでブラウザの自動再生ポリシーにより止まっている音声出力を、クリック・タッチ・キー入力のいずれでも開始できるようにする
 
 ## 前提条件
 
@@ -113,6 +114,17 @@ FmodParam,Pitch,1.2,Se,爆発              Seのラベル「爆発」で再生�
 - Add Componentから名前検索で追加する（専用メニューはありません）
 - 主な項目: `Disable` / `Engine` / `Type`（`Time` または `CharacterCount`）/ `Default Sound` / `Sound Info List`（キャラクターラベル別のSE）/ `Interval Count` / `Interval Time`
 - 内部的にはVoiceグループで `SoundPlayMode.Add` を指定して再生します（標準のReplayだと直前のボイスをフェードアウトさせてしまうため）
+
+## WebGLの自動再生ポリシー対策
+
+ブラウザはユーザーが操作するまで音声の再生を止めます。FMOD for UnityのWebGL出力は `window` の `click` / `touchend` を待って音声出力を開始しますが、キー入力では開始しないため、キーボードだけで操作すると音が鳴りません。
+
+`FmodSoundBootstrap` は `Awake` で `Runtime/Plugins/WebGL/UtageFmodAudioUnlock.jslib` の監視を登録し、`keydown` / `mousedown` / `pointerup` / `touchend` / `click` のどれかが来た時点でFMOD本体と同じ開始処理を呼び出します。追加の設定は要りません。
+
+- 監視はキャプチャフェーズで登録しているので、Unityのキャンバス側でイベントの伝播が止められていても動作します
+- 開始後もブラウザ側でAudioContextが停止された場合は、次の入力で再開を試みます
+- 最初の入力より前は音が出ません。タイトル画面などで最初にクリックやキー入力を求める画面を置いてください
+- Unity Editor上と、WebGL以外のプラットフォームでは何もしません
 
 ## 動作の仕組み
 
