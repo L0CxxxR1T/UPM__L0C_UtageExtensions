@@ -173,7 +173,6 @@ Shader "UtageExtension/AvatarEx/BlendableUI"
         [HideInInspector] _ColorOp("__colorOp", Float) = 0      // 0=None 1=Premultiply(rgb*=a) 2=LerpToWhite
         _MainTex("Sprite Texture", 2D) = "white" {}
         _Color("Tint", Color) = (1,1,1,1)
-        _MainUvRect("Main UV Rect", Vector) = (0,0,1,1)   // アトラス内位置の正規化 (offX,offY,sclX,sclY)
         _MaskTex0("Clip Mask 0", 2D) = "black" {}
         _MaskTex1("Clip Mask 1", 2D) = "black" {}
         _MaskTex2("Clip Mask 2", 2D) = "black" {}
@@ -213,10 +212,12 @@ Alpha側のブレンド（ブレンドモードに依存せず、描画先で決
 | 通常 Canvas | One(1) | OneMinusSrcAlpha(10) |
 | RenderTexture 空間内 | Zero(0) | OneMinusSrcAlpha(10)（`Utage/RenderTexture` と同一式） |
 
-- `_MainUvRect` はメインスプライトのアトラス内位置（`textureRect`）を正規化して渡す。マスク側は
-  対象スプライトとマスクスプライトの実サイズ比（`rect.size / pixelsPerUnit`）から中心そろえの
-  アフィン変換を `_MaskXform` として、範囲外クランプ用の矩形を `_MaskBounds` として渡す（詳細は
-  6章）。`UguiFlip` は頂点座標のみを反転し UV は変更しないため、Flip 時の UV 補正は不要。
+- `_MaskXform` はメインスプライトのUVをマスクスプライトのUVへ直接写すアフィン変換（scale.xy,
+  offset.zw）。C# 側で「メインUV→メイン矩形→マスク矩形（実サイズ比 `rect.size / pixelsPerUnit`
+  で中心そろえ）→マスクUV」を1本に合成して渡す。各スプライトの描画範囲とUVは `Image`（Simple）と
+  同じ `Sprites.DataUtility.GetPadding` / `GetOuterUV` で求めるため、トリムやアトラス詰めで
+  `textureRect` が `rect` より小さいスプライトも伸縮せずに重なる。範囲外クランプ用の矩形
+  `_MaskBounds` にはマスクスプライトの outerUV を渡す（詳細は6章）。`UguiFlip` は頂点座標のみを反転し UV は変更しないため、Flip 時の UV 補正は不要。
 - 未使用のマスクスロットは既定値 `"black"`（alpha=0）で埋めるが、これは保険であり、
   実際には `_MaskCount` の値で **明示的に分岐**して未使用スロットの `tex2D` 自体を評価しない
   （`_MaskXform` 未設定時の不定動作を避けるため）。`_MaskBounds` の範囲外は明示的に alpha=0 に
@@ -243,8 +244,8 @@ Alpha側のブレンド（ブレンドモードに依存せず、描画先で決
 実際には機能しておらず、**全パーツ同一サイズは Utage 側で保証されていない**。そのため AvatarEx は
 サイズ差を吸収できる設計とする：マスクソースのスプライトとマスク対象パーツのスプライトの
 実サイズ比を求め、両者が中心そろえで重なる前提でシェーダー側の UV を線形変換する（5.1節・6章）。
-これに加えて、AvatarEx 独自のエディタ検証（全パーツ同一サイズかどうか・トリム設定・回転パック
-設定）を用意し、極端な相違や UV 変換の前提が崩れる構成には `HelpBox` で警告する。
+トリムによる描画範囲のずれも同じ変換に含める。これに加えて、AvatarEx 独自のエディタ検証（全パーツ
+同一サイズかどうか・回転パック・タイトパック）を用意し、極端な相違や UV 変換の前提が崩れる構成には `HelpBox` で警告する。
 
 ## 6. 実行時の解決ロジック（`AvatarExPostProcessor`）
 
@@ -306,7 +307,7 @@ AvatarExData`）を取得し、`AvatarImage` の子（`childRoot`。private プ�
 - エディタのインスペクタプレビュー（ブレンド・マスクを反映したもの）は未対応。見た目確認は
   PlayMode 実行時に行う（素のプレビュー自体は維持する、4.2節）。
 - パーツ画像のサイズ差はシェーダー側のUVリマップ（中心そろえのアフィン変換）で吸収するが、
-  極端なアスペクト比の相違やスプライトのトリム・回転パック設定によっては見た目が崩れる場合が
+  極端なアスペクト比の相違やスプライトの回転パック・タイトパック設定によっては見た目が崩れる場合が
   ある。エディタ検証（4章）で警告するが、実行時の完全な安全は保証しない。
 - uGUI の `Mask`（Stencilクリッピング）配下で AvatarEx のパーツを使う構成は**非サポート**。
   `StencilMaterial.Add` がベースマテリアルをコピーするため、コピー後の `SetTexture` 等の更新が

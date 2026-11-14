@@ -74,7 +74,7 @@
 - ビルド/コンパイルはUnity Editor上で行う。CLIのビルドスクリプトはない
 - Editor操作・コンパイル確認・テスト実行は`unity-coding-rules`スキルの方針に従う。公式Unity CLIのpipeline（`com.unity.pipeline`）は導入済みで、uloop（`io.github.hatayama.uloopmcp`）はpipelineで足りない操作の補完に使う
 - Playでの動作確認は`Assets/L0C_ExtensionsDemo/Scenes/SampleScene.unity`を使う。Consoleはパッケージごとのプレフィックス（`[UtageFmod]`、`[UtageAvatarEx]`）で絞る
-- テストアセンブリはまだない（`com.unity.test-framework`は導入済み）。追加する場合は各パッケージの`Tests/`に置く
+- テストは各パッケージの`Tests/`に置く。現在あるのはAvatarExのEditModeテスト（`XXXL0C.UtagePlugins.AvatarEx.Tests.EditMode`）だけ
 
 ## コーディング規約
 

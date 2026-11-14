@@ -33,14 +33,11 @@ float4 _MainTex_ST;
 // ブレンドモードの色前処理（0=なし 1=プリマルチプライ 2=白へlerp）
 float _ColorOp;
 
-// メインスプライトのアトラス内位置（オフセットxy・スケールzw、0〜1正規化）
-float4 _MainUvRect;
-
 // クリッピングマスク（最大3ソース）
 sampler2D _MaskTex0;
 sampler2D _MaskTex1;
 sampler2D _MaskTex2;
-float4 _MaskXform0; // (scale.xy, offset.zw)
+float4 _MaskXform0; // メインUV→マスクUV (scale.xy, offset.zw)
 float4 _MaskXform1;
 float4 _MaskXform2;
 float4 _MaskBounds0; // (min.xy, max.zw)
@@ -63,9 +60,9 @@ v2f vert(appdata_t v)
 }
 
 // マスク1スロット分のアルファを取得する。範囲外は0（隣接アトラス領域を誤って拾わないようにクランプ）
-half SampleMaskAlpha(sampler2D tex, float2 localUv, float4 xform, float4 bounds)
+half SampleMaskAlpha(sampler2D tex, float2 mainUv, float4 xform, float4 bounds)
 {
-	float2 uv = localUv * xform.xy + xform.zw;
+	float2 uv = mainUv * xform.xy + xform.zw;
 	half inside = step(bounds.x, uv.x) * step(uv.x, bounds.z) * step(bounds.y, uv.y) * step(uv.y, bounds.w);
 	return tex2D(tex, uv).a * inside;
 }
@@ -88,18 +85,17 @@ fixed4 frag(v2f IN) : SV_Target
 		color.rgb *= color.a;
 	}
 
-	// クリッピングマスク（最大3ソースのOR=max合成、UVはアトラス位置・サイズ差を吸収してリマップ済み）
+	// クリッピングマスク（最大3ソースのOR=max合成、UVはアトラス位置・サイズ・トリム量の差を吸収してリマップ済み）
 	if (_MaskCount > 0.5)
 	{
-		float2 local = (IN.texcoord - _MainUvRect.xy) / _MainUvRect.zw;
-		half m = SampleMaskAlpha(_MaskTex0, local, _MaskXform0, _MaskBounds0);
+		half m = SampleMaskAlpha(_MaskTex0, IN.texcoord, _MaskXform0, _MaskBounds0);
 		if (_MaskCount > 1.5)
 		{
-			m = max(m, SampleMaskAlpha(_MaskTex1, local, _MaskXform1, _MaskBounds1));
+			m = max(m, SampleMaskAlpha(_MaskTex1, IN.texcoord, _MaskXform1, _MaskBounds1));
 		}
 		if (_MaskCount > 2.5)
 		{
-			m = max(m, SampleMaskAlpha(_MaskTex2, local, _MaskXform2, _MaskBounds2));
+			m = max(m, SampleMaskAlpha(_MaskTex2, IN.texcoord, _MaskXform2, _MaskBounds2));
 		}
 		m = lerp(m, 1.0 - m, _MaskInvert);
 		color.a *= m;

@@ -1,0 +1,24 @@
+{
+    "name": "XXXL0C.UtagePlugins.AvatarEx.Tests.EditMode",
+    "rootNamespace": "XXXL0C.UtagePlugins.AvatarEx.Tests",
+    "references": [
+        "XXXL0C.UtagePlugins.AvatarEx",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

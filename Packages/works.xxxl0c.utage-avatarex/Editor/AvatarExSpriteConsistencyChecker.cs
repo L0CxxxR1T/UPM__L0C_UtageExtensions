@@ -31,9 +31,9 @@ namespace XXXL0C.UtagePlugins.AvatarEx.Editor
                         issues.Add($"スプライト \"{sprite.name}\" は回転パックされています。マスクのUVリマップがズレる可能性があります。");
                     }
 
-                    if (sprite.rect.size != sprite.textureRect.size)
+                    if (sprite.packed && sprite.packingMode == SpritePackingMode.Tight)
                     {
-                        issues.Add($"スプライト \"{sprite.name}\" はトリムされています（見た目上のサイズと実データ領域が異なります）。");
+                        issues.Add($"スプライト \"{sprite.name}\" はタイトパックされています。マスクに隣接スプライトの画素が混ざる可能性があります。");
                     }
 
                     Vector2 unitSize = sprite.rect.size / sprite.pixelsPerUnit;

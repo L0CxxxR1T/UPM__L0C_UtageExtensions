@@ -34,6 +34,7 @@ namespace XXXL0C.UtagePlugins.AvatarEx
         readonly Dictionary<string, int> tagSlotCounter = new Dictionary<string, int>();
         readonly Dictionary<(string tag, int slot), MaskedMaterialEntry> maskedMaterials = new Dictionary<(string, int), MaskedMaterialEntry>();
         readonly Sprite[] maskSpriteBuffer = new Sprite[AvatarExData.MaxClipMaskSources];
+        readonly SpriteUvLayout[] maskLayoutBuffer = new SpriteUvLayout[AvatarExData.MaxClipMaskSources];
 
         /// <summary>
         /// AdvGraphicObjectAvatarEx.AddGraphicComponentOnInit から呼ばれる
@@ -156,13 +157,28 @@ namespace XXXL0C.UtagePlugins.AvatarEx
                 return;
             }
 
-            // マスクソースの現在表示中スプライトを集める（None のソースは除外＝alpha=0扱いと等価）
+            if (!AvatarExUvTransform.TryGetLayout(image.sprite, out SpriteUvLayout targetLayout))
+            {
+                // 描画領域が無いスプライトはマスクをかけても見た目が変わらない
+                image.enabled = true;
+                Material emptyFallback = AvatarExMaterialCache.GetShared(blendMode, isRenderTextureSpace);
+                if (emptyFallback != null)
+                {
+                    image.material = emptyFallback;
+                }
+                return;
+            }
+
+            // マスクソースの現在表示中スプライトを集める
+            // None や描画領域の無いソースは除外する（alpha=0扱いと等価）
             int validCount = 0;
             for (int i = 0; i < setting.ClipMaskSourceTags.Count && validCount < AvatarExData.MaxClipMaskSources; i++)
             {
-                if (TryGetCurrentSprite(setting.ClipMaskSourceTags[i], out Sprite sourceSprite) && sourceSprite != null)
+                if (TryGetCurrentSprite(setting.ClipMaskSourceTags[i], out Sprite sourceSprite)
+                    && AvatarExUvTransform.TryGetLayout(sourceSprite, out SpriteUvLayout sourceLayout))
                 {
                     maskSpriteBuffer[validCount] = sourceSprite;
+                    maskLayoutBuffer[validCount] = sourceLayout;
                     validCount++;
                 }
             }
@@ -187,14 +203,14 @@ namespace XXXL0C.UtagePlugins.AvatarEx
             }
 
             image.enabled = true;
-            Material material = GetOrCreateMaskedMaterial(tag, slotIndex, blendMode, image.sprite, validCount, setting.InvertMask);
+            Material material = GetOrCreateMaskedMaterial(tag, slotIndex, blendMode, image.sprite, targetLayout, validCount, setting.InvertMask);
             if (material != null)
             {
                 image.material = material;
             }
         }
 
-        Material GetOrCreateMaskedMaterial(string tag, int slotIndex, AvatarExBlendMode blendMode, Sprite targetSprite, int maskCount, bool invert)
+        Material GetOrCreateMaskedMaterial(string tag, int slotIndex, AvatarExBlendMode blendMode, Sprite targetSprite, in SpriteUvLayout targetLayout, int maskCount, bool invert)
         {
             (string tag, int slotIndex) key = (tag, slotIndex);
             if (!maskedMaterials.TryGetValue(key, out MaskedMaterialEntry entry))
@@ -236,18 +252,13 @@ namespace XXXL0C.UtagePlugins.AvatarEx
                 AvatarExMaterialCache.ApplyBlendMode(entry.Material, blendMode, isRenderTextureSpace);
             }
 
-            Vector4 mainUvRect = AvatarExUvTransform.CalcUvRect(targetSprite);
-            entry.Material.SetVector(AvatarExShaderIds.MainUvRect, mainUvRect);
-
             for (int i = 0; i < AvatarExData.MaxClipMaskSources; i++)
             {
                 if (i < maskCount)
                 {
-                    Sprite maskSprite = maskSpriteBuffer[i];
-                    entry.Material.SetTexture(AvatarExShaderIds.MaskTex[i], maskSprite.texture);
-                    AvatarExUvTransform.TryCalcMaskTransform(targetSprite, maskSprite, out Vector4 xform, out Vector4 bounds);
-                    entry.Material.SetVector(AvatarExShaderIds.MaskXform[i], xform);
-                    entry.Material.SetVector(AvatarExShaderIds.MaskBounds[i], bounds);
+                    entry.Material.SetTexture(AvatarExShaderIds.MaskTex[i], maskSpriteBuffer[i].texture);
+                    entry.Material.SetVector(AvatarExShaderIds.MaskXform[i], AvatarExUvTransform.CalcMaskTransform(targetLayout, maskLayoutBuffer[i]));
+                    entry.Material.SetVector(AvatarExShaderIds.MaskBounds[i], maskLayoutBuffer[i].OuterUv);
                 }
                 entry.LastMaskSprites[i] = i < maskCount ? maskSpriteBuffer[i] : null;
             }

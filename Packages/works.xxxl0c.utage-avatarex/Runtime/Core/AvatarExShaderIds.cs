@@ -15,7 +15,6 @@ namespace XXXL0C.UtagePlugins.AvatarEx
         public static readonly int SrcBlendA = Shader.PropertyToID("_SrcBlendA");
         public static readonly int DstBlendA = Shader.PropertyToID("_DstBlendA");
         public static readonly int ColorOp = Shader.PropertyToID("_ColorOp");
-        public static readonly int MainUvRect = Shader.PropertyToID("_MainUvRect");
         public static readonly int MaskCount = Shader.PropertyToID("_MaskCount");
         public static readonly int MaskInvert = Shader.PropertyToID("_MaskInvert");
 

@@ -15,7 +15,6 @@ Shader "UtageExtension/AvatarEx/BlendableUI"
 		[HideInInspector] _DstBlendA ("__dstA", Float) = 10
 		[HideInInspector] _ColorOp ("__colorOp", Float) = 0
 
-		_MainUvRect ("Main UV Rect", Vector) = (0,0,1,1)
 
 		_MaskTex0 ("Clip Mask 0", 2D) = "black" {}
 		_MaskTex1 ("Clip Mask 1", 2D) = "black" {}
