@@ -1,0 +1,23 @@
+name: Release UtageExt AvatarEx
+
+on:
+  push:
+    branches:
+      - release
+    paths:
+      - Packages/works.xxxl0c.utage-avatarex/**
+      - .github/workflows/release-utage-avatarex.yml
+      - .github/workflows/release-package.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    uses: ./.github/workflows/release-package.yml
+    with:
+      package-dir: Packages/works.xxxl0c.utage-avatarex
+      tag-prefix: utage-avatarex-
+      prerequisites: |
+        - 宴(Utage) 4.3.1: Asset Store から購入し、あらかじめプロジェクトにインポートしてください
