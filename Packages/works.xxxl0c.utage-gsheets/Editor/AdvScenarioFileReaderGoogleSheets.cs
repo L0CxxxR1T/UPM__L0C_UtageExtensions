@@ -84,7 +84,7 @@ namespace XXXL0C.UtagePlugins.GoogleSheets
                     {
                         foreach (RowDto row in sheet.rows)
                         {
-                            grid.AddRow(new List<string>(row.cells ?? Array.Empty<string>()));
+                            grid.AddRow(TrimTrailingEmptyCells(row.cells));
                         }
                     }
                     grid.ParseHeader();
@@ -106,6 +106,27 @@ namespace XXXL0C.UtagePlugins.GoogleSheets
                 stringGridDictionary = null;
                 return false;
             }
+        }
+
+        // getDataRange()は全行をシートの最大列数まで空文字で埋めて返す。
+        // AnimationシートのTime行などは行末まで数値として読むため、Excelリーダーと同じく
+        // 最後の非空セルまでで行を切る
+        private static List<string> TrimTrailingEmptyCells(string[] cells)
+        {
+            if (cells == null) return new List<string>();
+
+            int length = cells.Length;
+            while (length > 0 && string.IsNullOrEmpty(cells[length - 1]))
+            {
+                length--;
+            }
+
+            List<string> result = new List<string>(length);
+            for (int i = 0; i < length; i++)
+            {
+                result.Add(cells[i]);
+            }
+            return result;
         }
 
         // Apps ScriptにHTTPリクエストを送り、全シート分のJSONを取得する

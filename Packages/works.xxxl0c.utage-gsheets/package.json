@@ -1,7 +1,7 @@
 {
   "name": "works.xxxl0c.utage-gsheets",
   "displayName": "[xxxL0C] UtageExt: Google Sheets",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "unity": "6000.3",
   "unityRelease": "25f1",
   "description": "【宴4用】\nGoogleスプレッドシート読み込みプラグイン",
